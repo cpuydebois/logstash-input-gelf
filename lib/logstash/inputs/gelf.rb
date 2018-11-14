@@ -235,6 +235,9 @@ class LogStash::Inputs::Gelf < LogStash::Inputs::Base
   # @return [LogStash::Event] new event with parsed json gelf, assigned source host and coerced timestamp
   def self.new_event(json_gelf, host)
     event = parse(json_gelf)
+    # jsonObject = JSON.parse(json_gelf)
+    # event = LogStash::Event.new(jsonObject)
+
     return if event.nil?
 
     event.set(SOURCE_HOST_FIELD, host.force_encoding("UTF-8"))
@@ -258,10 +261,10 @@ class LogStash::Inputs::Gelf < LogStash::Inputs::Base
 
   # from_json_parse uses the Event#from_json method to deserialize and directly produce events
   def self.from_json_parse(json)
-    # from_json will always return an array of item.
-    # in the context of gelf, the payload should be an array of 1
-    LogStash::Event.from_json(json).first
-  rescue LogStash::Json::ParserError => e
+    # Using JSON Parser for correctly parsing UTF-8 characters
+    jsonObject = JSON.parse(json)
+    LogStash::Event.new(jsonObject)
+  rescue => e
     logger.error(PARSE_FAILURE_LOG_MESSAGE, :error => e, :data => json)
     LogStash::Event.new(MESSAGE_FIELD => json, TAGS_FIELD => [PARSE_FAILURE_TAG, '_fromjsonparser'])
   end # def self.from_json_parse

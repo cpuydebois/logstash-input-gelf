@@ -35,7 +35,8 @@ describe LogStash::Inputs::Gelf do
       "hello",
       "world",
       large_random,
-      "we survived gelf!"
+      "we survived gelf!",
+      "éàèùê"
     ] }
 
     before(:each) do
