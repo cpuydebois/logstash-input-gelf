@@ -1,3 +1,6 @@
+## 3.1.2
+  - Fix parsing non-ASCII UTF-8 characters in UDP GELF input
+
 ## 3.1.1
   - Docs: Set the default_codec doc attribute.
 
